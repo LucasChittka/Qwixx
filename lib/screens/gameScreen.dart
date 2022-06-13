@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   //Baut aus der aus der Datenbank ausgelesenen
-  Widget buildQwixxCard(Map<String, dynamic> _map) {
+  Widget buildQwixxCard(Map<String, dynamic> _map, List<dynamic> _misses) {
     List<bool> values = getValues(_map, 0);
     List<bool> values1 = getValues(_map, 1);
     List<bool> values2 = getValues(_map, 2);
@@ -52,6 +53,18 @@ class _GameScreenState extends State<GameScreen> {
       Row(children: fillRow(false, Colors.green, 1, values1)),
       Row(children: fillRow(true, Colors.blue, 2, values2)),
       Row(children: fillRow(true, Colors.yellow, 3, values3)),
+      Row(
+        children: [
+          QwixxMissField(Colors.grey, Text('Miss 1'), 0, card, _firestore,
+              loggedInUser, _misses[0]),
+          QwixxMissField(Colors.grey, Text('Miss 2'), 1, card, _firestore,
+              loggedInUser, _misses[1]),
+          QwixxMissField(Colors.grey, Text('Miss 3'), 2, card, _firestore,
+              loggedInUser, _misses[2]),
+          QwixxMissField(Colors.grey, Text('Miss 4'), 3, card, _firestore,
+              loggedInUser, _misses[3]),
+        ],
+      )
     ]);
   }
 
@@ -140,7 +153,8 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     _firestore.collection('qwixxCards').doc(loggedInUser.email).set({
       'player': loggedInUser.email.toString(),
-      'score': card.convertCardtoMap()
+      'score': card.convertCardtoMap(),
+      'misses': card.getMisses()
     });
     List<String> diceResultString = dices.getResultString();
     Map<String, int> diceResultMap = dices.getResultMap();
@@ -299,9 +313,14 @@ class _GameScreenState extends State<GameScreen> {
                             document.data()! as Map<String, dynamic>;
                         Map<String, dynamic> score =
                             data['score'] as Map<String, dynamic>;
+                        List<dynamic> misses = data['misses'] as List<dynamic>;
                         return ListTile(
                           title: Text(data['player']),
-                          subtitle: buildQwixxCard(score),
+                          subtitle: Column(
+                            children: [
+                              buildQwixxCard(score, misses),
+                            ],
+                          ),
                         );
                       }).toList(),
                     ),
@@ -330,7 +349,11 @@ class _GameScreenState extends State<GameScreen> {
                 'Logout',
                 style: TextStyle(fontSize: 30.0),
               ),
-              onPressed: () {
+              onPressed: () async {
+                await _firestore
+                    .collection('qwixxCards')
+                    .doc(loggedInUser.email.toString())
+                    .delete();
                 _auth.signOut();
                 Navigator.popAndPushNamed(context, WelcomeScreen.id);
                 //Get.to(const DicePage());
@@ -511,12 +534,84 @@ class _QwixxFieldState extends State<QwixxField> {
                 .doc(widget.loggedInUser.email)
                 .set({
               'player': widget.loggedInUser.email.toString(),
-              'score': widget.qwixxCard.convertCardtoMap()
+              'score': widget.qwixxCard.convertCardtoMap(),
+              'misses': widget.qwixxCard.getMisses()
             });
 
             if (widget.ticked) {
               widget.ticked = false;
             } else if (widget.qwixxCard.isAllowed(widget.row, widget.column)) {
+              widget.ticked = true;
+            }
+          });
+        },
+        child: Stack(
+          children: [
+            widget.content,
+            if (widget.ticked)
+              const Icon(
+                Icons.check_box_outlined,
+                //Null Aware Operator
+                size: 20.0,
+              )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class QwixxMissField extends StatefulWidget {
+  Color color;
+  Widget content;
+  int column;
+  late QwixxCard qwixxCard;
+  //Firebase Database Instanz
+  var _firestore;
+  //Speichert den angemeldeten User
+  late User loggedInUser;
+
+  bool ticked;
+
+  QwixxMissField(this.color, this.content, this.column, this.qwixxCard,
+      this._firestore, this.loggedInUser, this.ticked,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  State<QwixxMissField> createState() => _QwixxMissFieldState();
+}
+
+class _QwixxMissFieldState extends State<QwixxMissField> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith((states) {
+            // If the button is pressed, return green, otherwise blue
+            if (states.contains(MaterialState.pressed)) {
+              return widget.color;
+            }
+            return widget.color;
+          }),
+        ),
+        onPressed: () {
+          setState(() {
+            widget.qwixxCard.setMissCross(widget.column);
+            widget._firestore
+                .collection('qwixxCards')
+                .doc(widget.loggedInUser.email)
+                .set({
+              'player': widget.loggedInUser.email.toString(),
+              'score': widget.qwixxCard.convertCardtoMap(),
+              'misses': widget.qwixxCard.getMisses()
+            });
+
+            if (widget.ticked &&
+                widget.qwixxCard.missCanBeRemoved(widget.column)) {
+              widget.ticked = false;
+            } else if (widget.qwixxCard.missCanBeSet(widget.column)) {
               widget.ticked = true;
             }
           });

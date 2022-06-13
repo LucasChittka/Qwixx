@@ -11,7 +11,7 @@ class QwixxCard {
       growable: false);
 
   //Zählt die Anzahl der Fehlwürfe
-  int misses = 0;
+  List<bool> misses = [false, false, false, false];
 
   //Speichert ob Zeilen gesperrt sind oder nicht
   var lockedLines = [false, false, false, false];
@@ -24,13 +24,37 @@ class QwixxCard {
     player = _p;
   }
 
-  //Fehlwurf ist erlaubt und wurde eingetragen
-  bool missIsAllowedAndWasSet() {
-    if (misses < 4) {
-      misses++;
-      return true;
+  List<bool> getMisses() {
+    return misses;
+  }
+
+  bool missCanBeRemoved(int _miss) {
+    bool allowed = true;
+    for (int i = 3; i > _miss; i--) {
+      if (misses[i]) {
+        allowed = false;
+      }
     }
-    return false;
+    return allowed;
+  }
+
+  bool missCanBeSet(int _miss) {
+    bool allowed = true;
+    for (int i = 0; i < _miss; i++) {
+      if (!misses[i]) {
+        allowed = false;
+      }
+    }
+    return allowed;
+  }
+
+  //Fehlwurf ist erlaubt und wurde eingetragen
+  void setMissCross(int _miss) {
+    if (misses[_miss] && missCanBeRemoved(_miss)) {
+      misses[_miss] = false;
+    } else if (!misses[3] && missCanBeSet(_miss)) {
+      misses[_miss] = true;
+    }
   }
 
   //Der angegebene Zug ist erlaubt
