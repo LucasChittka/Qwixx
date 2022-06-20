@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qwixx_game/screens/welcomeScreen.dart';
@@ -30,6 +31,183 @@ class _GameScreenState extends State<GameScreen> {
   var _firestore;
   //Speichert den angemeldeten User
   late User loggedInUser;
+
+  Widget eye(Color _c) {
+    return Container(
+      width: 20,
+      height: 20,
+      decoration: BoxDecoration(color: _c, shape: BoxShape.circle),
+    );
+  }
+
+  Widget dice(Color _c, String _v) {
+    Widget rightDice = Container();
+    switch (_v) {
+      case "1":
+        rightDice = Expanded(
+          child: AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Container(
+              decoration: BoxDecoration(color: _c),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(_c), eye(_c)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(_c), eye(_c)],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        break;
+      case "2":
+        rightDice = Expanded(
+          child: AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Container(
+              decoration: BoxDecoration(color: _c),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(_c), eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(_c), eye(_c)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(_c)],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        break;
+      case "3":
+        rightDice = Expanded(
+          child: AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Container(
+              decoration: BoxDecoration(color: _c),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(_c), eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(_c)],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        break;
+      case "4":
+        rightDice = Expanded(
+          child: AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Container(
+              decoration: BoxDecoration(color: _c),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(_c)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(Colors.white)],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        break;
+      case "5":
+        rightDice = Expanded(
+          child: AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Container(
+              decoration: BoxDecoration(color: _c),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(Colors.white)],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        break;
+      case "6":
+        rightDice = Expanded(
+          child: AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Container(
+              decoration: BoxDecoration(color: _c),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(Colors.white)],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [eye(Colors.white), eye(Colors.white)],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        break;
+    }
+    return rightDice;
+  }
 
   List<bool> getValues(Map<String, dynamic> _map, int _row) {
     List<bool> values = List.filled(12, false);
@@ -168,64 +346,18 @@ class _GameScreenState extends State<GameScreen> {
       body: Center(
         child: Column(
           children: [
-            Expanded(
-              //Gesture Detector
-              //Reagiert auf User Interaction bezüglich des Widgets
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    dices.dice();
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  dices.dice();
 
-                    //Collection 'diceResults' erstellen
-                    _firestore.collection('diceResults').doc('1').set({
-                      'result': diceResultMap,
-                      'player': loggedInUser.email
-                    });
-                    //showValue();
-                  });
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: Container(
-                          color: Colors.grey,
-                          child: Image.asset(
-                              'images/dice' + diceResultString[0] + '.png')),
-                    ),
-                    Expanded(
-                      child: Container(
-                          color: Colors.grey,
-                          child: Image.asset(
-                              'images/dice' + diceResultString[1] + '.png')),
-                    ),
-                    Expanded(
-                      child: Container(
-                          color: Colors.red,
-                          child: Image.asset(
-                              'images/dice' + diceResultString[2] + '.png')),
-                    ),
-                    Expanded(
-                      child: Container(
-                          color: Colors.green,
-                          child: Image.asset(
-                              'images/dice' + diceResultString[3] + '.png')),
-                    ),
-                    Expanded(
-                      child: Container(
-                          color: Colors.blue,
-                          child: Image.asset(
-                              'images/dice' + diceResultString[4] + '.png')),
-                    ),
-                    Expanded(
-                      child: Container(
-                          color: Colors.yellow,
-                          child: Image.asset(
-                              'images/dice' + diceResultString[5] + '.png')),
-                    ),
-                  ],
-                ),
-              ),
+                  //Collection 'diceResults' erstellen
+                  _firestore.collection('diceResults').doc('1').set(
+                      {'result': diceResultMap, 'player': loggedInUser.email});
+                  //showValue();
+                });
+              },
+              child: Text('Roll the Dices'),
             ),
             StreamBuilder<QuerySnapshot>(
                 stream: _firestore.collection('diceResults').snapshots(),
@@ -254,13 +386,26 @@ class _GameScreenState extends State<GameScreen> {
                               data['player'] +
                               '\' hat gewürfelt: '),
                           subtitle: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text('Weiß: ' + result['white1'].toString()),
-                              Text(', Weiß: ' + result['white2'].toString()),
-                              Text(', Rot: ' + result['red'].toString()),
-                              Text(', Grün: ' + result['green'].toString()),
-                              Text(', Blau: ' + result['blue'].toString()),
-                              Text(', Gelb: ' + result['yellow'].toString()),
+                              Container(
+                                  child: dice(Colors.grey,
+                                      result['white1'].toString())),
+                              Container(
+                                  child: dice(Colors.grey,
+                                      result['white2'].toString())),
+                              Container(
+                                  child: dice(
+                                      Colors.red, result['red'].toString())),
+                              Container(
+                                  child: dice(Colors.green,
+                                      result['green'].toString())),
+                              Container(
+                                  child: dice(
+                                      Colors.blue, result['blue'].toString())),
+                              Container(
+                                  child: dice(Colors.yellow,
+                                      result['yellow'].toString())),
                             ],
                           ));
                     }).toList(),
