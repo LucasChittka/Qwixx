@@ -334,7 +334,6 @@ class _GameScreenState extends State<GameScreen> {
       'score': card.convertCardtoMap(),
       'misses': card.getMisses()
     });
-    List<String> diceResultString = dices.getResultString();
     Map<String, int> diceResultMap = dices.getResultMap();
 
     return Scaffold(
@@ -510,130 +509,6 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 }
-
-// class QwixxCard1 extends StatelessWidget {
-//   QwixxCard1({Key? key}) : super(key: key);
-//
-//   List<Widget> fillRow(bool reverse, Color color) {
-//     List<Widget> row = [];
-//     if (reverse) {
-//
-//       for (int i = 12; i >= 2; i--) {
-//         row.add(QwixxField(color, FieldContent(i.toString()),));
-//       }
-//     } else {
-//       for (int i = 2; i <= 12; i++) {
-//         row.add(QwixxField(color, FieldContent(i.toString())));
-//       }
-//     }
-//     row.add(
-//       QwixxField(
-//         color,
-//         Icon(Icons.lock),
-//       ),
-//     );
-//     return row;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(children: [
-//       Row(children: fillRow(false, Colors.red)),
-//       Row(children: fillRow(false, Colors.green)),
-//       Row(children: fillRow(true, Colors.blue)),
-//       Row(children: fillRow(true, Colors.yellow)),
-//       Row(
-//         children: [
-//           ScoreInfo('Kreuze', 'Punkte'),
-//           ScoreInfo('1x', '1'),
-//           ScoreInfo('2x', '3'),
-//           ScoreInfo('3x', '6'),
-//           ScoreInfo('4x', '10'),
-//           ScoreInfo('5x', '15'),
-//           ScoreInfo('6x', '21'),
-//           ScoreInfo('7x', '28'),
-//           ScoreInfo('8x', '36'),
-//           ScoreInfo('9x', '45'),
-//           ScoreInfo('10x', '55'),
-//           ScoreInfo('11x', '66'),
-//           ScoreInfo('12x', '78'),
-//           ScoreInfo('Fehlwürfe je -5', 'o o o o')
-//         ],
-//       )
-//     ]);
-//   }
-// }
-
-// class Methods {
-//   Widget scoreInfo(String crosses, String points) {
-//     return Expanded(
-//       child: Container(
-//         decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-//         child: Column(
-//           children: [Text(crosses), Text('-------'), Text(points)],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget fieldContent(String value) {
-//     return Text(
-//       value,
-//       style: const TextStyle(fontSize: 20.0),
-//     );
-//   }
-//
-//   List<Widget> fillRow(bool reverse, Color color) {
-//     List<Widget> row = [];
-//     if (reverse) {
-//       for (int i = 12; i >= 2; i--) {
-//         row.add(QwixxField(color, FieldContent(i.toString())));
-//       }
-//     } else {
-//       for (int i = 2; i <= 12; i++) {
-//         row.add(QwixxField(color, FieldContent(i.toString())));
-//       }
-//     }
-//     row.add(
-//       QwixxField(
-//         color,
-//         Icon(Icons.lock),
-//       ),
-//     );
-//     return row;
-//   }
-// }
-//
-// class ScoreInfo extends StatelessWidget {
-//   String crosses;
-//   String points;
-//   ScoreInfo(this.crosses, this.points);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(
-//       child: Container(
-//         decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-//         child: Column(
-//           children: [Text(crosses), Text('-------'), Text(points)],
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-// class FieldContent extends StatelessWidget {
-//   String value;
-//   FieldContent(this.value, {Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Text(
-//       value,
-//       style: const TextStyle(fontSize: 20.0),
-//     );
-//   }
-// }
 
 class QwixxField extends StatefulWidget {
   Color color;
