@@ -148,6 +148,13 @@ class QwixxCard {
           break;
       }
     }
+
+    for (int i = 0; i < 4; i++) {
+      if (misses[i]) {
+        result = result - 5;
+      }
+    }
+
     return result;
   }
 

@@ -332,7 +332,8 @@ class _GameScreenState extends State<GameScreen> {
     _firestore.collection('qwixxCards').doc(loggedInUser.email).set({
       'player': loggedInUser.email.toString(),
       'score': card.convertCardtoMap(),
-      'misses': card.getMisses()
+      'misses': card.getMisses(),
+      'result': card.result()
     });
     Map<String, int> diceResultMap = dices.getResultMap();
 
@@ -458,11 +459,17 @@ class _GameScreenState extends State<GameScreen> {
                         Map<String, dynamic> score =
                             data['score'] as Map<String, dynamic>;
                         List<dynamic> misses = data['misses'] as List<dynamic>;
+                        dynamic result = data['result'];
                         return ListTile(
                           title: Text(data['player']),
                           subtitle: Column(
                             children: [
                               buildQwixxCard(score, misses),
+                              Text(
+                                'Die aktuelle Punktzahl ist ' +
+                                    result.toString(),
+                                style: TextStyle(fontSize: 20.0),
+                              ),
                             ],
                           ),
                         );
@@ -555,7 +562,8 @@ class _QwixxFieldState extends State<QwixxField> {
                 .set({
               'player': widget.loggedInUser.email.toString(),
               'score': widget.qwixxCard.convertCardtoMap(),
-              'misses': widget.qwixxCard.getMisses()
+              'misses': widget.qwixxCard.getMisses(),
+              'result': widget.qwixxCard.result()
             });
 
             if (widget.ticked) {
@@ -625,7 +633,8 @@ class _QwixxMissFieldState extends State<QwixxMissField> {
                 .set({
               'player': widget.loggedInUser.email.toString(),
               'score': widget.qwixxCard.convertCardtoMap(),
-              'misses': widget.qwixxCard.getMisses()
+              'misses': widget.qwixxCard.getMisses(),
+              'result': widget.qwixxCard.result()
             });
 
             if (widget.ticked &&
