@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:qwixx_game/screens/welcomeScreen.dart';
 
 import '../components/dices.dart';
+import '../components/game.dart';
 import '../components/qwixxCard.dart';
 
 class GameScreen extends StatefulWidget {
@@ -31,6 +32,7 @@ class _GameScreenState extends State<GameScreen> {
   var _firestore;
   //Speichert den angemeldeten User
   late User loggedInUser;
+  late Game game;
 
   Widget eye(Color _c) {
     return Container(
@@ -44,164 +46,146 @@ class _GameScreenState extends State<GameScreen> {
     Widget rightDice = Container();
     switch (_v) {
       case "1":
-        rightDice = Expanded(
-          child: AspectRatio(
-            aspectRatio: 1 / 1,
-            child: Container(
-              decoration: BoxDecoration(color: _c),
-              child: Column(
+        rightDice = Container(
+          width: 100.00,
+          height: 100.00,
+          decoration: BoxDecoration(color: _c),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(_c), eye(_c)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(_c), eye(_c)],
-                  ),
-                ],
+                children: [eye(_c), eye(_c)],
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white)],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(_c), eye(_c)],
+              ),
+            ],
           ),
         );
         break;
       case "2":
-        rightDice = Expanded(
-          child: AspectRatio(
-            aspectRatio: 1 / 1,
-            child: Container(
-              decoration: BoxDecoration(color: _c),
-              child: Column(
+        rightDice = Container(
+          width: 100.00,
+          height: 100.00,
+          decoration: BoxDecoration(color: _c),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(_c), eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(_c), eye(_c)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(_c)],
-                  ),
-                ],
+                children: [eye(_c), eye(Colors.white)],
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(_c), eye(_c)],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white), eye(_c)],
+              ),
+            ],
           ),
         );
         break;
       case "3":
-        rightDice = Expanded(
-          child: AspectRatio(
-            aspectRatio: 1 / 1,
-            child: Container(
-              decoration: BoxDecoration(color: _c),
-              child: Column(
+        rightDice = Container(
+          width: 100.00,
+          height: 100.00,
+          decoration: BoxDecoration(color: _c),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(_c), eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(_c)],
-                  ),
-                ],
+                children: [eye(_c), eye(Colors.white)],
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white)],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white), eye(_c)],
+              ),
+            ],
           ),
         );
         break;
       case "4":
-        rightDice = Expanded(
-          child: AspectRatio(
-            aspectRatio: 1 / 1,
-            child: Container(
-              decoration: BoxDecoration(color: _c),
-              child: Column(
+        rightDice = Container(
+          width: 100.00,
+          height: 100.00,
+          decoration: BoxDecoration(color: _c),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(_c)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(Colors.white)],
-                  ),
-                ],
+                children: [eye(Colors.white), eye(Colors.white)],
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(_c)],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white), eye(Colors.white)],
+              ),
+            ],
           ),
         );
         break;
       case "5":
-        rightDice = Expanded(
-          child: AspectRatio(
-            aspectRatio: 1 / 1,
-            child: Container(
-              decoration: BoxDecoration(color: _c),
-              child: Column(
+        rightDice = Container(
+          width: 100.00,
+          height: 100.00,
+          decoration: BoxDecoration(color: _c),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(Colors.white)],
-                  ),
-                ],
+                children: [eye(Colors.white), eye(Colors.white)],
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white)],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white), eye(Colors.white)],
+              ),
+            ],
           ),
         );
         break;
       case "6":
-        rightDice = Expanded(
-          child: AspectRatio(
-            aspectRatio: 1 / 1,
-            child: Container(
-              decoration: BoxDecoration(color: _c),
-              child: Column(
+        rightDice = Container(
+          width: 100.00,
+          height: 100.00,
+          decoration: BoxDecoration(color: _c),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(Colors.white)],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [eye(Colors.white), eye(Colors.white)],
-                  ),
-                ],
+                children: [eye(Colors.white), eye(Colors.white)],
               ),
-            ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white), eye(Colors.white)],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [eye(Colors.white), eye(Colors.white)],
+              ),
+            ],
           ),
         );
         break;
@@ -316,6 +300,14 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
+  Widget getButtonText(String _p) {
+    if (loggedInUser.email.toString() == _p) {
+      return Text('Weitergeben an nächsten Spieler');
+    }
+    return Text(
+        'Warte ab bis du am Zug bist und verfolge die Züge deiner Mitspieler');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -323,7 +315,9 @@ class _GameScreenState extends State<GameScreen> {
     _auth = FirebaseAuth.instance;
     _firestore = FirebaseFirestore.instance;
     getCurrentUser();
+
     card = QwixxCard(dices, loggedInUser.email.toString());
+    game = Game();
   }
 
   @override
@@ -335,6 +329,7 @@ class _GameScreenState extends State<GameScreen> {
       'misses': card.getMisses(),
       'result': card.result()
     });
+
     Map<String, int> diceResultMap = dices.getResultMap();
 
     return Scaffold(
@@ -346,16 +341,120 @@ class _GameScreenState extends State<GameScreen> {
       body: Center(
         child: Column(
           children: [
+            SizedBox(
+              height: 10.00,
+            ),
             ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  dices.dice();
+              onPressed: () async {
+                var docRef = await _firestore.collection("qwixxGame").doc("1");
+                docRef.get().then((doc) => {
+                      setState(() {
+                        if (!doc.exists) {
+                          game.start();
+                          game.setGameOwner(loggedInUser.email.toString());
+                          _firestore.collection('qwixxGame').doc('1').set({
+                            'players': game.getPlayers(),
+                            'gameOwner': game.getGameOwner(),
+                            'currentPlayer': game.getCurrentPlayer(),
+                            'startet': true,
+                          });
+                        } else {
+                          _firestore.collection('qwixxGame').doc('1').delete();
+                          game.deleteAll();
+                        }
+                      }),
+                    });
+              },
+              child: Text('Spiel starten oder laufendes Spiel beenden'),
+            ),
+            SizedBox(
+              height: 10.00,
+            ),
+            StreamBuilder<QuerySnapshot>(
+                stream: _firestore.collection('qwixxGame').snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  }
 
-                  //Collection 'diceResults' erstellen
-                  _firestore.collection('diceResults').doc('1').set(
-                      {'result': diceResultMap, 'player': loggedInUser.email});
-                  //showValue();
-                });
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Expanded(
+                        child: Column(
+                            children: [const Text("Loading Qwixx Game")]));
+                  }
+                  return Expanded(
+                    child: ListView(
+                      controller: ScrollController(),
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data()! as Map<String, dynamic>;
+                        List<dynamic> players = data['players'];
+                        dynamic currentPlayer = data['currentPlayer'];
+                        dynamic startet = data['startet'];
+                        dynamic gameOwner = data['gameOwner'];
+                        return ListTile(
+                          title: Center(
+                            child: Text(currentPlayer + ' ist am Zug'),
+                          ),
+                          subtitle: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        if (loggedInUser.email ==
+                                            currentPlayer) {
+                                          setState(() {
+                                            game.next(currentPlayer);
+                                            _firestore
+                                                .collection('qwixxGame')
+                                                .doc('1')
+                                                .set({
+                                              'players': game.getPlayers(),
+                                              'gameOwner': game.getGameOwner(),
+                                              'currentPlayer':
+                                                  game.getCurrentPlayer(),
+                                              'startet': true,
+                                            });
+                                          });
+                                        }
+                                      },
+                                      child: getButtonText(currentPlayer)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                }),
+            ElevatedButton(
+              onPressed: () async {
+                final docRef =
+                    await _firestore.collection('qwixxGame').doc('1');
+                docRef.get().then(
+                  (DocumentSnapshot doc) async {
+                    final data = await doc.data() as Map<String, dynamic>;
+                    dynamic currentUser = data['currentPlayer'];
+                    if (loggedInUser.email.toString() ==
+                        currentUser.toString()) {
+                      setState(() {
+                        dices.dice();
+                        //Collection 'diceResults' erstellen
+                        _firestore.collection('diceResults').doc('1').set({
+                          'result': diceResultMap,
+                          'player': loggedInUser.email
+                        });
+                        //showValue();
+                      });
+                    }
+                  },
+                  onError: (e) => print("Error getting document: $e"),
+                );
               },
               child: Text('Roll the Dices'),
             ),
@@ -382,27 +481,34 @@ class _GameScreenState extends State<GameScreen> {
                       Map<String, dynamic> result =
                           data['result'] as Map<String, dynamic>;
                       return ListTile(
-                          title: Text('Spieler \'' +
-                              data['player'] +
-                              '\' hat gewürfelt: '),
+                          title: Center(
+                            child: Text('Spieler ' +
+                                data['player'] +
+                                ' hat zuletzt gewürfelt: '),
+                          ),
                           subtitle: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
                                   child: dice(Colors.grey,
                                       result['white1'].toString())),
+                              SizedBox(width: 5.00),
                               Container(
                                   child: dice(Colors.grey,
                                       result['white2'].toString())),
+                              SizedBox(width: 5.00),
                               Container(
                                   child: dice(
                                       Colors.red, result['red'].toString())),
+                              SizedBox(width: 5.00),
                               Container(
                                   child: dice(Colors.green,
                                       result['green'].toString())),
+                              SizedBox(width: 5.00),
                               Container(
                                   child: dice(
                                       Colors.blue, result['blue'].toString())),
+                              SizedBox(width: 5.00),
                               Container(
                                   child: dice(Colors.yellow,
                                       result['yellow'].toString())),
@@ -411,31 +517,6 @@ class _GameScreenState extends State<GameScreen> {
                     }).toList(),
                   );
                 }),
-
-            // Column(children: [
-            //   Row(children: fillRow(false, Colors.red, 0)),
-            //   Row(children: fillRow(false, Colors.green, 1)),
-            //   Row(children: fillRow(true, Colors.blue, 2)),
-            //   Row(children: fillRow(true, Colors.yellow, 3)),
-            //   Row(
-            //     children: [
-            //       scoreInfo('Kreuze', 'Punkte'),
-            //       scoreInfo('1x', '1'),
-            //       scoreInfo('2x', '3'),
-            //       scoreInfo('3x', '6'),
-            //       scoreInfo('4x', '10'),
-            //       scoreInfo('5x', '15'),
-            //       scoreInfo('6x', '21'),
-            //       scoreInfo('7x', '28'),
-            //       scoreInfo('8x', '36'),
-            //       scoreInfo('9x', '45'),
-            //       scoreInfo('10x', '55'),
-            //       scoreInfo('11x', '66'),
-            //       scoreInfo('12x', '78'),
-            //       scoreInfo('Fehlwürfe je -5', 'o o o o')
-            //     ],
-            //   )
-            // ]),
             StreamBuilder<QuerySnapshot>(
                 stream: _firestore.collection('qwixxCards').snapshots(),
                 builder: (BuildContext context,
@@ -450,6 +531,7 @@ class _GameScreenState extends State<GameScreen> {
                             children: [const Text("Loading Qwixx Cards")]));
                   }
                   return Expanded(
+                    flex: 3,
                     child: ListView(
                       controller: ScrollController(),
                       children:
@@ -460,6 +542,9 @@ class _GameScreenState extends State<GameScreen> {
                             data['score'] as Map<String, dynamic>;
                         List<dynamic> misses = data['misses'] as List<dynamic>;
                         dynamic result = data['result'];
+                        if (game.userNotInGame(data['player'])) {
+                          game.addPlayer(data['player']);
+                        }
                         return ListTile(
                           title: Text(data['player']),
                           subtitle: Column(
@@ -469,6 +554,30 @@ class _GameScreenState extends State<GameScreen> {
                                 'Die aktuelle Punktzahl ist ' +
                                     result.toString(),
                                 style: TextStyle(fontSize: 20.0),
+                              ),
+                              ElevatedButton(
+                                child: Text(
+                                  'Spieler ' + data['player'] + ' entfernen',
+                                  style: TextStyle(fontSize: 20.0),
+                                ),
+                                onPressed: () async {
+                                  _firestore
+                                      .collection('qwixxGame')
+                                      .doc('1')
+                                      .delete();
+                                  game.deleteAll();
+
+                                  await _firestore
+                                      .collection('qwixxCards')
+                                      .doc(data['player'])
+                                      .delete();
+                                  if (data['player'].toString() ==
+                                      loggedInUser.email.toString()) {
+                                    _auth.signOut();
+                                    Navigator.popAndPushNamed(
+                                        context, WelcomeScreen.id);
+                                  }
+                                },
                               ),
                             ],
                           ),
@@ -553,25 +662,38 @@ class _QwixxFieldState extends State<QwixxField> {
             return widget.color;
           }),
         ),
-        onPressed: () {
-          setState(() {
-            widget.qwixxCard.setCross(widget.row, widget.column);
-            widget._firestore
-                .collection('qwixxCards')
-                .doc(widget.loggedInUser.email)
-                .set({
-              'player': widget.loggedInUser.email.toString(),
-              'score': widget.qwixxCard.convertCardtoMap(),
-              'misses': widget.qwixxCard.getMisses(),
-              'result': widget.qwixxCard.result()
-            });
+        onPressed: () async {
+          final docRef =
+              await widget._firestore.collection('qwixxGame').doc('1');
+          docRef.get().then(
+            (DocumentSnapshot doc) async {
+              final data = await doc.data() as Map<String, dynamic>;
+              dynamic currentUser = data['currentPlayer'];
+              if (widget.loggedInUser.email.toString() ==
+                  currentUser.toString()) {
+                setState(() {
+                  widget.qwixxCard.setCross(widget.row, widget.column);
+                  widget._firestore
+                      .collection('qwixxCards')
+                      .doc(widget.loggedInUser.email)
+                      .set({
+                    'player': widget.loggedInUser.email.toString(),
+                    'score': widget.qwixxCard.convertCardtoMap(),
+                    'misses': widget.qwixxCard.getMisses(),
+                    'result': widget.qwixxCard.result()
+                  });
 
-            if (widget.ticked) {
-              widget.ticked = false;
-            } else if (widget.qwixxCard.isAllowed(widget.row, widget.column)) {
-              widget.ticked = true;
-            }
-          });
+                  if (widget.ticked) {
+                    widget.ticked = false;
+                  } else if (widget.qwixxCard
+                      .isAllowed(widget.row, widget.column)) {
+                    widget.ticked = true;
+                  }
+                });
+              }
+            },
+            onError: (e) => print("Error getting document: $e"),
+          );
         },
         child: Stack(
           children: [
@@ -624,26 +746,39 @@ class _QwixxMissFieldState extends State<QwixxMissField> {
             return widget.color;
           }),
         ),
-        onPressed: () {
-          setState(() {
-            widget.qwixxCard.setMissCross(widget.column);
-            widget._firestore
-                .collection('qwixxCards')
-                .doc(widget.loggedInUser.email)
-                .set({
-              'player': widget.loggedInUser.email.toString(),
-              'score': widget.qwixxCard.convertCardtoMap(),
-              'misses': widget.qwixxCard.getMisses(),
-              'result': widget.qwixxCard.result()
-            });
+        onPressed: () async {
+          final docRef =
+              await widget._firestore.collection('qwixxGame').doc('1');
+          docRef.get().then(
+            (DocumentSnapshot doc) async {
+              final data = await doc.data() as Map<String, dynamic>;
 
-            if (widget.ticked &&
-                widget.qwixxCard.missCanBeRemoved(widget.column)) {
-              widget.ticked = false;
-            } else if (widget.qwixxCard.missCanBeSet(widget.column)) {
-              widget.ticked = true;
-            }
-          });
+              dynamic currentUser = data['currentPlayer'];
+              if (widget.loggedInUser.email.toString() ==
+                  currentUser.toString()) {
+                setState(() {
+                  widget.qwixxCard.setMissCross(widget.column);
+                  widget._firestore
+                      .collection('qwixxCards')
+                      .doc(widget.loggedInUser.email)
+                      .set({
+                    'player': widget.loggedInUser.email.toString(),
+                    'score': widget.qwixxCard.convertCardtoMap(),
+                    'misses': widget.qwixxCard.getMisses(),
+                    'result': widget.qwixxCard.result()
+                  });
+
+                  if (widget.ticked &&
+                      widget.qwixxCard.missCanBeRemoved(widget.column)) {
+                    widget.ticked = false;
+                  } else if (widget.qwixxCard.missCanBeSet(widget.column)) {
+                    widget.ticked = true;
+                  }
+                });
+              }
+            },
+            onError: (e) => print("Error getting document: $e"),
+          );
         },
         child: Stack(
           children: [
