@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qwixx_game/screens/registrationScreen.dart';
 import 'package:qwixx_game/screens/gameScreen.dart';
-
 import 'loginScreen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -18,8 +17,11 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   String name = '';
 
+  //build Methode
+  //return: das was das Widget darstellt
   @override
   Widget build(BuildContext context) {
+    //Scaffold besteht aus AppBar und Body
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,16 +31,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: Center(
         child: Column(
           children: [
+            //Button für Weiterleitung auf LoginSeite
             ElevatedButton(
               child: const Text(
                 'Login',
                 style: TextStyle(fontSize: 30.0),
               ),
+              //Wenn Button geklickt wird
               onPressed: () async {
+                //Weiterleiten auf Login Seite
                 await Navigator.pushNamed(context, LoginScreen.id,
                     arguments: name);
               },
             ),
+            //Button für Registrierung
             ElevatedButton(
               child: const Text(
                 'Register',

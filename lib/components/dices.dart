@@ -31,16 +31,6 @@ class Dices {
     return diceResultMap;
   }
 
-  int getSum(String _d1, String _d2) {
-    int? value1 = diceResultMap[_d1];
-    int? value2 = diceResultMap[_d2];
-    if (value1 != null && value2 != null) {
-      int sum = value1 + value2;
-      return sum;
-    }
-    return -1;
-  }
-
   //Neue Werte als Zufallszahl zwischen 1 und 6 generieren
   void dice() {
     for (int i = 0; i < diceResultString.length; i++) {

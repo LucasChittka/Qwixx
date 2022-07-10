@@ -167,6 +167,7 @@ class QwixxCard {
     return qwixxCard;
   }
 
+  //Karte zum schreiben in die Datenbank in eine Map konvertieren
   Map<String, bool> convertCardtoMap() {
     Map<String, bool> map = {};
     for (int i = 0; i < 4; i++) {

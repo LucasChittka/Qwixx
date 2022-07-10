@@ -23,7 +23,7 @@ class _GameScreenState extends State<GameScreen> {
   //Würfel
   late Dices dices;
 
-  //
+  //QwixxCard
   late QwixxCard card;
 
   //Firebase Authentification Instanz
@@ -34,6 +34,8 @@ class _GameScreenState extends State<GameScreen> {
   late User loggedInUser;
   late Game game;
 
+  //Methode die ein Auge im Würfel zur Verwendung im UI konstruiert
+  //return: UI Componente für ein Auge im Würfel
   Widget eye(Color _c) {
     return Container(
       width: 20,
@@ -42,6 +44,8 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  //return: UI Componente für einen Würfel
+  //input: Die Farbe des Würfels und die Anzahl der Augen
   Widget dice(Color _c, String _v) {
     Widget rightDice = Container();
     switch (_v) {
@@ -193,6 +197,9 @@ class _GameScreenState extends State<GameScreen> {
     return rightDice;
   }
 
+  //return: Liste mit den Werten einer Zeile in einer QwixxCard
+  //input: Die aus der Datenbank ausgelesene Karte als Map
+  //input: Die Zeile, für die die Werte ausgelesen werden sollen
   List<bool> getValues(Map<String, dynamic> _map, int _row) {
     List<bool> values = List.filled(12, false);
     for (int j = 0; j < 12; j++) {
@@ -203,7 +210,9 @@ class _GameScreenState extends State<GameScreen> {
     return values;
   }
 
-  //Baut aus der aus der Datenbank ausgelesenen
+  //return: UI-Komponente QwixxCard auf Basis einer aus der Datenbank ausgelesenen QwixxCard
+  //input: Die Werte jeder Reihe in Form einer Map
+  //input: Die Werte der Fehlwürfe in Form einer Liste
   Widget buildQwixxCard(Map<String, dynamic> _map, List<dynamic> _misses) {
     List<bool> values = getValues(_map, 0);
     List<bool> values1 = getValues(_map, 1);
@@ -217,19 +226,22 @@ class _GameScreenState extends State<GameScreen> {
       Row(children: fillRow(true, Colors.yellow, 3, values3)),
       Row(
         children: [
-          QwixxMissField(Colors.grey, Text('Miss 1'), 0, card, _firestore,
+          SingleQwixxMissField(Colors.grey, Text('Miss 1'), 0, card, _firestore,
               loggedInUser, _misses[0]),
-          QwixxMissField(Colors.grey, Text('Miss 2'), 1, card, _firestore,
+          SingleQwixxMissField(Colors.grey, Text('Miss 2'), 1, card, _firestore,
               loggedInUser, _misses[1]),
-          QwixxMissField(Colors.grey, Text('Miss 3'), 2, card, _firestore,
+          SingleQwixxMissField(Colors.grey, Text('Miss 3'), 2, card, _firestore,
               loggedInUser, _misses[2]),
-          QwixxMissField(Colors.grey, Text('Miss 4'), 3, card, _firestore,
+          SingleQwixxMissField(Colors.grey, Text('Miss 4'), 3, card, _firestore,
               loggedInUser, _misses[3]),
         ],
       )
     ]);
   }
 
+  //return: UI Componente, die anzeigt wie viele Punkte man für welche Anzahl Kreuze bekommt
+  //input: Anzahl Kreuze als String
+  //input: Anzahl Punkte als String
   Widget scoreInfo(String crosses, String points) {
     return Expanded(
       child: Container(
@@ -241,6 +253,7 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  //UI-Componente, die den Inhalt eines QwixxFeldes in der Karte repräsentiert
   Widget fieldContent(String value) {
     return Text(
       value,
@@ -248,13 +261,18 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  //return Liste von UI-Componenten, die eine Zeile einer QwixxKarte aus passenden QwixxFeldern zusammenbaut
+  //input: bool als Laufrichtung der Karte (von 2-12 oder von 12-2)
+  //input: Farbe der Reihe
+  //input: Integer der definiert welche Zeile in der Karte die Reihe darstellt
+  //input: List<bool>, die für jedes Feld der Zeile angibt ob es aktuell angekreuzt ist oder nicht
   List<Widget> fillRow(bool reverse, Color color, int _row, List<bool> values) {
     List<Widget> row = [];
     int rowNumber = _row;
     if (reverse) {
       int columnNumber = 0;
       for (int i = 12; i >= 2; i--) {
-        row.add(QwixxField(
+        row.add(SingleQwixxCardField(
             color,
             fieldContent(i.toString()),
             rowNumber,
@@ -268,7 +286,7 @@ class _GameScreenState extends State<GameScreen> {
     } else {
       int columnNumber = 0;
       for (int i = 2; i <= 12; i++) {
-        row.add(QwixxField(
+        row.add(SingleQwixxCardField(
             color,
             fieldContent(i.toString()),
             rowNumber,
@@ -281,13 +299,14 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
     row.add(
-      QwixxField(color, Icon(Icons.lock), rowNumber, 11, card, _firestore,
-          loggedInUser, values[11]),
+      SingleQwixxCardField(color, Icon(Icons.lock), rowNumber, 11, card,
+          _firestore, loggedInUser, values[11]),
     );
     return row;
   }
 
-  getCurrentUser() {
+  //Setzt die Variable loggedInUser auf den aktuell eingeloggten User
+  void setCurrentUser() {
     try {
       final user = _auth.currentUser;
       if (user != null) {
@@ -300,29 +319,37 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
-  Widget getButtonText(String _p) {
-    if (loggedInUser.email.toString() == _p) {
+  //return UI-Compomenente, die die richtige Beschriftung für den "Weitergeben Button" zurückgibt
+  Widget getButtonText(String _currentPlayer) {
+    if (loggedInUser.email.toString() == _currentPlayer) {
       return Text('Weitergeben an nächsten Spieler');
     }
     return Text(
         'Warte ab bis du am Zug bist und verfolge die Züge deiner Mitspieler');
   }
 
+  //InitState Methode - wird nur bei der Initialisierung des gameScreens aufgerufen
   @override
   void initState() {
     super.initState();
+    //Würfel setzen
     dices = Dices();
+    //FirebaseAuth Instanz setzen
     _auth = FirebaseAuth.instance;
+    //FirebaseFirestore Instanz setzen
     _firestore = FirebaseFirestore.instance;
-    getCurrentUser();
-
+    //Eingeloggten Nutzer setzen
+    setCurrentUser();
+    //Karte für den eingeloggten Nutzer setzen
     card = QwixxCard(dices, loggedInUser.email.toString());
+    //Ein Spiel setzen
     game = Game();
   }
 
   @override
   //Build Method = Das was dargestelt wird
   Widget build(BuildContext context) {
+    //QwixxCard für eingeloggten Nutzer in die Datenbank schreiben
     _firestore.collection('qwixxCards').doc(loggedInUser.email).set({
       'player': loggedInUser.email.toString(),
       'score': card.convertCardtoMap(),
@@ -332,8 +359,10 @@ class _GameScreenState extends State<GameScreen> {
 
     Map<String, int> diceResultMap = dices.getResultMap();
 
+    //UI-Componente bestehend aus AppBar und Body
     return Scaffold(
       backgroundColor: Colors.white,
+      //AppBar mit passendem Text
       appBar: AppBar(
         title: Text('Hello Player ' + loggedInUser.email.toString()),
         backgroundColor: Colors.red,
@@ -341,24 +370,30 @@ class _GameScreenState extends State<GameScreen> {
       body: Center(
         child: Column(
           children: [
+            //SizedBox für Whitespace zwischen einzelnen Komponenten
             SizedBox(
               height: 10.00,
             ),
+            //Button zum Spiel starten
             ElevatedButton(
               onPressed: () async {
                 var docRef = await _firestore.collection("qwixxGame").doc("1");
                 docRef.get().then((doc) => {
                       setState(() {
+                        //Wenn noch kein Spiel existiert
                         if (!doc.exists) {
                           game.start();
                           game.setGameOwner(loggedInUser.email.toString());
+                          //Erstelltes Spiel in die Datenbank schreiben
                           _firestore.collection('qwixxGame').doc('1').set({
                             'players': game.getPlayers(),
                             'gameOwner': game.getGameOwner(),
                             'currentPlayer': game.getCurrentPlayer(),
                             'startet': true,
                           });
+                          //Wenn aktuell ein Spiel läuft
                         } else {
+                          //Alles zurücksetzen
                           _firestore.collection('qwixxGame').doc('1').delete();
                           game.deleteAll();
                         }
@@ -370,6 +405,10 @@ class _GameScreenState extends State<GameScreen> {
             SizedBox(
               height: 10.00,
             ),
+            //StreamBuilder, der Informationen zum laufenden Spiel
+            //in Echtzeit aus der Datenbank holt und anzeigt
+            //und einen Button zur Weitergabe an den nächsten Spieler
+            //in Abhängigkeit der Daten aus der Datenbank anzeigt
             StreamBuilder<QuerySnapshot>(
                 stream: _firestore.collection('qwixxGame').snapshots(),
                 builder: (BuildContext context,
@@ -432,6 +471,9 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   );
                 }),
+            //Button zum würfeln
+            //Ruft die Methode Dice() auf und
+            //schreibt die neuen Werte in die Datenbank
             ElevatedButton(
               onPressed: () async {
                 final docRef =
@@ -458,6 +500,8 @@ class _GameScreenState extends State<GameScreen> {
               },
               child: Text('Roll the Dices'),
             ),
+            //StreamBuilder, der die aktuellen Würfelergebnisse aus der Datenbank ausliest
+            //und die sechs Würfel mit ihren Ergebnissen visuell darstellt
             StreamBuilder<QuerySnapshot>(
                 stream: _firestore.collection('diceResults').snapshots(),
                 builder: (BuildContext context,
@@ -486,6 +530,7 @@ class _GameScreenState extends State<GameScreen> {
                                 data['player'] +
                                 ' hat zuletzt gewürfelt: '),
                           ),
+                          //Reihe mit den sechs Würfeln mit jeweils aktuellem Wert
                           subtitle: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -517,6 +562,8 @@ class _GameScreenState extends State<GameScreen> {
                     }).toList(),
                   );
                 }),
+            //Streambuilder, der die QwixxCards aller User aus der Datenbank ausliest
+            //und mit ihrem aktuellen Zwischenergebnis anzeigt
             StreamBuilder<QuerySnapshot>(
                 stream: _firestore.collection('qwixxCards').snapshots(),
                 builder: (BuildContext context,
@@ -586,6 +633,7 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   );
                 }),
+            //Infozeile, die darstellte, wie viele Punkte man für welche Spielzüge bekommt
             Row(
               children: [
                 scoreInfo('Kreuze', 'Punkte'),
@@ -604,6 +652,7 @@ class _GameScreenState extends State<GameScreen> {
                 scoreInfo('Fehlwürfe je -5', 'o o o o')
               ],
             ),
+            //Logout Button, der die QwixxCard des Users löscht und ihn ausloggt
             ElevatedButton(
               child: const Text(
                 'Logout',
@@ -626,53 +675,67 @@ class _GameScreenState extends State<GameScreen> {
   }
 }
 
-class QwixxField extends StatefulWidget {
+//Klasse, die für eine einzelnes Ankreuz-Feld in der QwixxCard steht
+//Ist ein eigenenes StatefulWidget, das einen Button darstellt
+//Wird der Button geklickt, wird die geklickte Punktzahl in die Karte eingetragen
+//Und in der Datenbank gespeichert
+class SingleQwixxCardField extends StatefulWidget {
+  //Farbe des Feldes
   Color color;
+  //Der Inhalt des Feldes (z. B. eine Zahl oder das Reihe-sperren-Symbol)
   Widget content;
+  //Zeile und Spalte des Feldes in der gesamten Karte
   int row;
   int column;
+  //Die zugehörige QwixxCard
   late QwixxCard qwixxCard;
   //Firebase Database Instanz
   var _firestore;
   //Speichert den angemeldeten User
   late User loggedInUser;
-
+  //Speichert ob Feld aktuell angekreuzt ist oder nicht
   bool ticked;
 
-  QwixxField(this.color, this.content, this.row, this.column, this.qwixxCard,
-      this._firestore, this.loggedInUser, this.ticked,
+  SingleQwixxCardField(this.color, this.content, this.row, this.column,
+      this.qwixxCard, this._firestore, this.loggedInUser, this.ticked,
       {Key? key})
       : super(key: key);
 
   @override
-  State<QwixxField> createState() => _QwixxFieldState();
+  State<SingleQwixxCardField> createState() => _SingleQwixxCardFieldState();
 }
 
-class _QwixxFieldState extends State<QwixxField> {
+class _SingleQwixxCardFieldState extends State<SingleQwixxCardField> {
+  //build Methode
+  //return: das was das Widget darstellt
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) {
-            // If the button is pressed, return green, otherwise blue
             if (states.contains(MaterialState.pressed)) {
               return widget.color;
             }
             return widget.color;
           }),
         ),
+        //Wird aufgerufen, wenn auf das Feld geklickt wird
         onPressed: () async {
+          //Daten zum Spiel aus der Datenbank holen
           final docRef =
               await widget._firestore.collection('qwixxGame').doc('1');
           docRef.get().then(
             (DocumentSnapshot doc) async {
               final data = await doc.data() as Map<String, dynamic>;
               dynamic currentUser = data['currentPlayer'];
+              //Wenn der SPieler der den Button klickt aktuell am Zug ist
               if (widget.loggedInUser.email.toString() ==
                   currentUser.toString()) {
                 setState(() {
+                  //Den Zug in die QwixxCard eintragen
                   widget.qwixxCard.setCross(widget.row, widget.column);
+                  //Den Zug in die Datenbank eintragen
                   widget._firestore
                       .collection('qwixxCards')
                       .doc(widget.loggedInUser.email)
@@ -682,7 +745,7 @@ class _QwixxFieldState extends State<QwixxField> {
                     'misses': widget.qwixxCard.getMisses(),
                     'result': widget.qwixxCard.result()
                   });
-
+                  //Auf dem Screen dargestelltes Kreuz togglen
                   if (widget.ticked) {
                     widget.ticked = false;
                   } else if (widget.qwixxCard
@@ -695,6 +758,7 @@ class _QwixxFieldState extends State<QwixxField> {
             onError: (e) => print("Error getting document: $e"),
           );
         },
+        //Beschriftung des Feldes
         child: Stack(
           children: [
             widget.content,
@@ -711,28 +775,40 @@ class _QwixxFieldState extends State<QwixxField> {
   }
 }
 
-class QwixxMissField extends StatefulWidget {
+//Klasse, die für eine einzelnes Fehlwurf-Ankreuz-Feld in der QwixxCard steht
+//Ist ein eigenenes StatefulWidget, das einen Button darstellt
+//Wird der Button geklickt, wird ein Fehlwurf in die Karte eingetragen
+//Und in der Datenbank gespeichert
+class SingleQwixxMissField extends StatefulWidget {
+  //Farbe
   Color color;
+  //Inhalt
   Widget content;
+  //Spalte des Fehlwurf-Feldes
   int column;
+  //Zugehörige Karte
   late QwixxCard qwixxCard;
   //Firebase Database Instanz
   var _firestore;
   //Speichert den angemeldeten User
   late User loggedInUser;
 
+  //Speichert ob aktuell angekreuzt oder nicht
   bool ticked;
 
-  QwixxMissField(this.color, this.content, this.column, this.qwixxCard,
+  //Konstruktor
+  SingleQwixxMissField(this.color, this.content, this.column, this.qwixxCard,
       this._firestore, this.loggedInUser, this.ticked,
       {Key? key})
       : super(key: key);
 
   @override
-  State<QwixxMissField> createState() => _QwixxMissFieldState();
+  State<SingleQwixxMissField> createState() => _SingleQwixxMissFieldState();
 }
 
-class _QwixxMissFieldState extends State<QwixxMissField> {
+class _SingleQwixxMissFieldState extends State<SingleQwixxMissField> {
+  //build Methode
+  //return: das was das Widget darstellt
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -746,18 +822,23 @@ class _QwixxMissFieldState extends State<QwixxMissField> {
             return widget.color;
           }),
         ),
+        //Wenn Button gedürckt wird
         onPressed: () async {
           final docRef =
               await widget._firestore.collection('qwixxGame').doc('1');
           docRef.get().then(
             (DocumentSnapshot doc) async {
+              //qwixxGame Daten aus datenBank auslesen
               final data = await doc.data() as Map<String, dynamic>;
-
+              //Spieler der aktuell am Zug ist holen
               dynamic currentUser = data['currentPlayer'];
+              //Wenn der Spieler aktuell am Zug ist mit dem Spieler der den Button drückt übereinstimmt
               if (widget.loggedInUser.email.toString() ==
                   currentUser.toString()) {
                 setState(() {
+                  //Kreuz setzen
                   widget.qwixxCard.setMissCross(widget.column);
+                  //Änderungen in Datenbank schreiben
                   widget._firestore
                       .collection('qwixxCards')
                       .doc(widget.loggedInUser.email)
@@ -767,7 +848,7 @@ class _QwixxMissFieldState extends State<QwixxMissField> {
                     'misses': widget.qwixxCard.getMisses(),
                     'result': widget.qwixxCard.result()
                   });
-
+                  //Das auf dem Screen angezeigte Kreuz togglen
                   if (widget.ticked &&
                       widget.qwixxCard.missCanBeRemoved(widget.column)) {
                     widget.ticked = false;
@@ -780,6 +861,7 @@ class _QwixxMissFieldState extends State<QwixxMissField> {
             onError: (e) => print("Error getting document: $e"),
           );
         },
+        //Die Beschriftung des Feldes
         child: Stack(
           children: [
             widget.content,

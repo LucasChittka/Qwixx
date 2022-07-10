@@ -1,9 +1,12 @@
 class Game {
+  //speichert ob Spiel gestartet
   bool startet = false;
+  //Liste mit an Spiel teilnehmenden Spielern
   List<String> players = [];
+  //Spieler der aktuell am Zug ist
   String currentPlayer = '';
+  //Spieler, der das SPiel gestartet hat
   String gameOwner = '';
-  int currentPlayerIndex = 0;
 
   void setGameOwner(String _o) {
     gameOwner = _o;
@@ -11,6 +14,10 @@ class Game {
 
   String getGameOwner() {
     return gameOwner;
+  }
+
+  void setPlayers(List<String> _l) {
+    players = _l;
   }
 
   List<String> getPlayers() {
@@ -29,6 +36,7 @@ class Game {
     return startet;
   }
 
+  //Spiel starten
   void start() {
     startet = true;
     currentPlayer = players.first;
@@ -56,8 +64,9 @@ class Game {
     return true;
   }
 
+  //Current Player auf den nöchsten Spieler, der am Zug ist setzen
   void next(String _currentPlayer) {
-    int index;
+    int index = 0;
     for (int i = 0; i < players.length; i++) {
       if (_currentPlayer == players[i]) {
         index = i;
